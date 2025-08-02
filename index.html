@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="google-adsense-account" content="ca-pub-4704501585981299">
+  <title>Para Roni 💌</title>
+  <meta name="google-adsense-account" content="ca-pub-4704501585981299">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+        font-family: Georgia, 'Times New Roman', serif;
+      background-color: #0f001a;
+      overflow: hidden;
+      position: relative;
+      color: #fff;
+    }
+
+.center-container {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start; /* cambia de center a flex-start */
+  justify-content: center;
+  padding-top: 200px; /* este valor baja la carta */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+
+
+.letter p {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 1.2rem;
+  color: var(--letter-clr-text);
+  max-height: 100%;
+  overflow-y: auto;
+
+  /* Sombras para texto */
+  text-shadow:
+    1px 1px 2px rgba(118, 1, 153, 0.8),
+    0 0 5px rgba(118, 1, 153, 0.6);
+}
+
+
+    /* Fondo con la imagen */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url("Kuro.jpg");
+      background-repeat: repeat;
+      background-size: 200px;
+      background-position: center;
+      opacity: 0.3;
+      z-index: -2;
+    }
+
+    /* Canvas para las partículas */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+    }
+
+    .envelope {
+	--duration: 1000ms;
+
+	--shadow-width: calc(var(--envelope-width) * 0.85);
+	--shadow-blur: 15px;
+
+	--envelope-width: 300px;
+	--envelope-height: 175px;
+	--envelope-clr-bg: #640083;
+	--envelope-clr-bg-side: #620180;
+	--envelope-clr-bg-bottom: #760199;
+	--envelope-clr-bg-top: #760199;
+	--envelope-clr-txt: #fff;
+
+	--envelope-transform: rotateY(0deg);
+	--envelope-transform-hover: rotateY(180deg);
+	--evelope-rotate-delay: calc(var(--duration) / 1);
+	--evelope-rotate-delay-hover: 0ms;
+
+	--letter-clr-bg: #fff;
+	--letter-clr-text: #760199;
+	--letter-font-size: 1rem;
+	--letter-delay: 0ms;
+	--letter-delay-hover: calc(
+		var(--duration) * 1.25
+	); /* delay before revealing card */
+
+	--letter-height: calc(var(--envelope-height) - 2rem);
+	--letter-height-hover: calc(var(--envelope-height) * 1.75);
+
+	--fold-rotate: rotateX(0deg);
+	--fold-zindex: 10;
+	--fold-zindex-hover: 0;
+	--fold-rotate-hover: rotateX(180deg);
+	--fold-delay: calc(var(--duration) / 2); /* delay before opening top section */
+	--fold-delay-hover: calc(var(--duration) * .75);
+
+	--front-font-size: 1rem;
+	--snowman-width: 50px;
+	--bells-width: 30px;
+
+	position: relative;
+	height: var(--envelope-height);
+	width: var(--envelope-width);
+	perspective: 1000px;
+	cursor: pointer;
+}
+
+@media (min-width: 720px) {
+	.envelope {
+		--envelope-width: 600px;
+		--envelope-height: 350px;
+		--letter-font-size: 1.6rem;
+		--snowman-width: 130px;
+		--bells-width: 60px;
+		--front-font-size: 1.25rem;
+	}
+}
+/* shadow */
+.envelope::after {
+	content: "";
+	position: absolute;
+	top: 110%;
+	left: 50%;
+	width: var(--shadow-width);
+	height: 40px;
+	transition: var(--duration) ease-in-out;
+	transition-delay: var(--evelope-rotate-delay);
+	transform: var(--shadow-transform);
+	translate: -50% 0;
+	border-radius: 50%;
+	background: rgba(56, 6, 6, 0.4);
+	filter: blur(var(--shadow-blur));
+}
+
+.envelope:hover {
+	--envelope-transform: var(--envelope-transform-hover, 0deg);
+	--evelope-rotate-delay: var(--evelope-rotate-delay-hover);
+	--shadow-transform: rotateY(180deg);
+	--fold-rotate: var(--fold-rotate-hover);
+	--fold-delay: var(--fold-delay-hover);
+	--fold-zindex: var(--fold-zindex-hover);
+	--letter-height: var(--letter-height-hover);
+	--letter-delay: var(--letter-delay-hover);
+}
+
+.envelope-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	transition: var(--duration) ease-in-out;
+	transition-delay: var(--evelope-rotate-delay);
+	transform-style: preserve-3d;
+	transform: var(--envelope-transform);
+	display: grid;
+}
+
+.envelope-front,
+.envelope-back {
+	position: relative;
+	grid-area: 1/1;
+	width: 100%;
+	height: 100%;
+	background-color: var(--envelope-clr-bg);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	perspective: 1000px;
+	isolation: isolate;
+}
+
+.envelope-front {
+	color: var(--envelope-clr-txt);
+	display: grid;
+	place-content: center;
+}
+.envelope-front .postage-stamp {
+	position: absolute;
+	top: 1em;
+	right: 0.5em;
+	width: 15%;
+}
+.envelope-front .address {
+	text-align: left;
+	font-size: var(--front-font-size);
+}
+.envelope-front .address > p > span:first-child {
+	font-family: system-ui;
+	font-weight: 200;
+}
+.envelope-front .address > p > span:last-of-type {
+	font-weight: 800;
+}
+
+.envelope-back {
+	/* start with back rotated*/
+	transform: rotateY(180deg);
+}
+/* back folds */
+.envelope-back::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	background-image: conic-gradient(
+		transparent 60deg,
+		var(--envelope-clr-bg-side) 60deg 120deg,
+		var(--envelope-clr-bg-bottom) 120deg 240deg,
+		var(--envelope-clr-bg-side) 240deg 300deg,
+		transparent 300deg
+	);
+}
+/* top fold which folds up on hover */
+.envelope-back .top-fold {
+	position: absolute;
+	inset: 0;
+	z-index: var(--fold-zindex, 10);
+	background-color: var(--envelope-clr-bg-top);
+	clip-path: polygon(0% 0%, 50% 55%, 100% 0%);
+
+	transform: var(--fold-rotate);
+	transform-origin: top;
+	transition: var(--duration) ease-in-out;
+	transition-delay: var(--fold-delay);
+}
+
+.letter {
+	position: absolute;
+	bottom: 5px;
+	left: 50%;
+	width: 90%;
+	height: var(--letter-height);
+	font-size: var(--letter-font-size);
+	transform: translateX(-50%);
+	background: var(--letter-clr-bg);
+	z-index: 2;
+	padding: 2em 3em;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: center;
+	text-align: center;
+	transition: var(--duration) ease-in-out;
+	transition-delay: var(--letter-delay);
+	overflow: hidden;
+   box-shadow: 0 8px 20px rgba(118, 1, 153, 0.7);
+  border-radius: 15px;
+}
+.letter > svg.snowman {
+	width: var(--snowman-width);
+}
+.letter svg.bells {
+	width: var(--bells-width);
+	color: orange;
+}
+.letter p {
+	margin: 0;
+	font-weight: bold;
+	width: 32ch;
+	color: var(--letter-clr-text);
+}
+
+.custom-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain; 
+}
+.custom-image2 {
+    width: 150px;
+    height: 150px;
+    object-fit: contain; 
+}
+
+.highlight {
+    display: block; 
+    margin-top: 10px; 
+    font-size: 1.8rem;  
+    font-weight: bold; 
+}
+.btn-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, #760199, #aa00ff);
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #aa00ffaa;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  z-index: 1000; /* para que esté arriba de todo */
+}
+
+.btn-flotante:hover {
+  background: linear-gradient(45deg, #aa00ff, #760199);
+  box-shadow: 0 0 20px #ff80ffcc;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Fondo con imagen -->
+  <div class="floating-hearts"></div>
+
+  <!-- Lienzo para las partículas -->
+  <canvas id="canvas"></canvas>
+
+  <script>
+    // Protección básica
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'F12') e.preventDefault();
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') e.preventDefault();
+      if (e.ctrlKey && e.key === 'u') e.preventDefault();
+    });
+
+    // Canvas de partículas "My Love"
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let particles = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createParticle() {
+      const x = random(0, canvas.width);
+      const y = random(0, canvas.height);
+      const speedX = random(-1, 1);
+      const speedY = random(-1, 1);
+      const text = "My Love";
+      const size = random(12, 22);
+      return { x, y, speedX, speedY, text, size };
+    }
+
+    function drawParticle(p) {
+      ctx.font = `${p.size}px Arial`;
+      ctx.fillStyle = "#ff80ff";
+      ctx.fillText(p.text, p.x, p.y);
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(drawParticle);
+      particles.forEach((p) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+      });
+      requestAnimationFrame(animate);
+    }
+
+    for (let i = 0; i < 60; i++) {
+      particles.push(createParticle());
+    }
+
+    animate();
+  </script>
+
+<div class="center-container">
+  <div class="envelope">
+    <div class="envelope-inner">
+      <div class="envelope-front">
+        <div class="postage-stamp">
+          <!-- Podés dejar el SVG o quitarlo si querés algo más minimal -->
+        </div>
+        <div class="address">
+          <p><span>To:</span> <span>Roni 💜</span></p>
+          <p><span>From:</span> <span>Pepe</span></p>
+        </div>
+      </div>
+
+      <div class="envelope-back">
+        <div class="top-fold"></div>
+        <div class="letter">
+          <p>‎💌 Mi querida Roni:<br>
+  ‎Desde que empecé a conocerte, supe que había algo diferente en ti.<br>
+  ‎Tu forma de ser, tan linda y comprensiva, me hace sentir afortunado cada día. 🌸💜<br>
+
+  ‎Incluso en los momentos más difíciles, ahí estás tú...<br>
+  ‎Con esa manera tan única y maravillosa de ser,<br>
+  ‎que con tan solo unos minutos hablando me haces olvidar los malos días,<br>
+  ‎las noticias tristes o cualquier preocupación. 🌧️➡️☀️<br>
+
+  ‎💫 Contigo, todo se reinicia.<br>
+  ‎Y en esos momentos, me siento nuevo,<br>
+  ‎como si el mundo se pausara por un instante<br>
+  ‎y volviera a empezar... 🕊️<br>
+
+  ‎Me encanta cómo tu voz puede alegrarme incluso los días más grises ☁️<br>
+  ‎y cómo tus palabras llegan justo cuando más las necesito. 🎧💖<br>
+
+  ‎✨ Tus ojos...<br>
+  ‎Tienen esa chispa única que me hace querer mirar más allá,<br>
+  ‎como si fueran perlas preciosas que todos quisieran,<br>
+  ‎pero que sólo tú sabes llevar con esa magia tan tuya. 👀🌟<br>
+
+  ‎Y tu carita… tan tierna, tan tú, 🥹<br>
+  ‎acompañada de una sonrisa que me derrite el corazón. 😊💘<br>
+
+  ‎💖 Gracias por ser como eres,<br>
+  ‎por motivarme, por acompañarme,<br>
+  ‎por estar ahí cuando más lo necesito,<br>
+  ‎y por hacerme sentir especial solo por tenerte cerca. 🫂💞<br>
+
+  ‎🌷 Eres única, Roni.<br>
+  ‎Y aunque quizás no te lo diga a cada momento,<br>
+  ‎lo siento en cada pequeño detalle. 🎀<br>
+
+  ‎Con cariño infinito,<br>
+  ‎Tu Pepe 🍕💜<br>
+  ‎(el otro lado de Peperoni)<br>
+  ‎🎀💗🖤 Kuromi & Love 🖤💗🎀<br>
+  <br>
+  <br>
+  <br>
+</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4704501585981299"
+     crossorigin="anonymous"></script>
+
+<script>
+	document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+  
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'F12') {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && e.key === 'u') {
+      e.preventDefault();
+    }
+  });
+</script>
+<button class="btn-flotante" onclick="window.location.href='sorpresa.html'">Otra sorpresa</button>
+
+</body>
+</html>
